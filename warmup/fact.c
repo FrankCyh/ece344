@@ -1,5 +1,4 @@
 #include <stdbool.h>
-
 #include "common.h"
 
 int factorial(int n) {
