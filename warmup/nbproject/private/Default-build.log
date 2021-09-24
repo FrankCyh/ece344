@@ -1,0 +1,17 @@
+cc -MM *.c > .depend
+cc -g -Wall -Werror   -c -o hi.o hi.c
+cc   hi.o -lm  -o hi
+cc -g -Wall -Werror   -c -o hello.o hello.c
+cc   hello.o -lm  -o hello
+cc -g -Wall -Werror   -c -o words.o words.c
+cc   words.o -lm  -o words
+cc -g -Wall -Werror   -c -o fact.o fact.c
+cc   fact.o -lm  -o fact
+cc -g -Wall -Werror   -c -o test_point.o test_point.c
+cc -g -Wall -Werror   -c -o point.o point.c
+cc   test_point.o point.o -lm  -o test_point
+cc -g -Wall -Werror   -c -o test_wc.o test_wc.c
+cc -g -Wall -Werror   -c -o wc.o wc.c
+cc   test_wc.o wc.o -lm  -o test_wc
+cc -g -Wall -Werror   -c -o cpr.o cpr.c
+cc   cpr.o -lm  -o cpr

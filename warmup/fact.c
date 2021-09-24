@@ -15,19 +15,22 @@ bool isInteger(double a) {
 
 int main(int argc, char** argv) {
     if (argc == 1)  // if no argument is passed in
-        printf("Huh?");
+        printf("Huh?\n");
     else {
         char* endPtr;
-        double val = strtod(argv[1], &endPtr); // record the last position of string recorded
+        double val = strtod(argv[1], &endPtr);  // record the last position of string recorded
 
-        if (!isInteger(val))  // if val is not an integer
-            printf("Huh?");
+        if (endPtr == argv[1])  // not a double, is a sting; e.g. "hello"
+            printf("Huh?\n");
 
-        else if (val > 12 || val <= 0)  // if first argument passed is not positive
-            printf("Overflow");
+        else if (!isInteger(val) || val <= 0)  // if val is not an integer or if first argument passed is not positive
+            printf("Huh?\n");
+
+        else if (val > 12)  // if overflow
+            printf("Overflow\n");
 
         else
-            printf("%d", factorial(val));
+            printf("%d\n", factorial(val));
     }
     return 0;
 }
