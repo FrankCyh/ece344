@@ -9,9 +9,9 @@
 #include "common.h"
 
 typedef struct wordNode {
-    char *str;
+    char *str;  // the word
     int occurrence;
-    struct wordNode *next;
+    struct wordNode *next;  // other word with same hashKey
 } wordNode;
 
 struct wc {
@@ -19,18 +19,17 @@ struct wc {
     wordNode **hashTable;  //* array of wordNode*
 };
 
-int tableSize = 0;  // make global variable
+int tableSize = 0;  // make hashtale's size global variable
 
 // Description: generate hash key for a word
 int myHashFunction(char *str) {
     int hashKey = 0;
 
     while (*str++ != '\0')
-        hashKey = ((hashKey << 4) + hashKey) + *str;  // hash function: hash = hash * 8 - hash+ 5
-    hashKey = (hashKey < 0) ? hashKey * -1 : hashKey;
+        hashKey = *str + ((hashKey << 4) + hashKey);  // random hash function
+    hashKey = (hashKey < 0) ? hashKey * -1 : hashKey;  // make all hashKey positive
 
-    hashKey = hashKey % tableSize;  // hashKey < tableSize
-    return hashKey;
+    return hashKey % tableSize;  // hashKey < tableSize
 }
 
 void insertNode(struct wc *wc, char *str) {
@@ -42,7 +41,7 @@ void insertNode(struct wc *wc, char *str) {
     if (!wc->hashTable[hashKey]) {
         wc->hashTable[hashKey]             = (wordNode *)malloc(sizeof(wordNode));
         wc->hashTable[hashKey]->occurrence = 1;
-        wc->hashTable[hashKey]->str        = malloc(strlen(str) + 1);
+        wc->hashTable[hashKey]->str        = (char*) malloc((strlen(str) + 1) * sizeof(char));
         strcpy(wc->hashTable[hashKey]->str, str);
         wc->hashTable[hashKey]->next = NULL;
         return;
@@ -58,7 +57,6 @@ void insertNode(struct wc *wc, char *str) {
             prev = curr;
             curr = curr->next;
         }
-
 
         //  3° Another key for this mapKey
         if (curr == NULL) {  // iterate over the linked list
@@ -77,6 +75,7 @@ void insertNode(struct wc *wc, char *str) {
 
 struct wc *wc_init(char *word_array, long size) {
     struct wc *wc;
+
     wc = (struct wc *)malloc(sizeof(struct wc));
     assert(wc);  // check successful allocation
 
@@ -94,17 +93,19 @@ struct wc *wc_init(char *word_array, long size) {
 
 
     wc->hashTable = (wordNode **)malloc(tableSize * sizeof(wordNode));
+
     assert(wc->hashTable);
+
     for (int i = 0; i < tableSize; i++)
-        wc->hashTable[i] = NULL;
+        wc->hashTable[i] = NULL;  // initialize to NULL first
 
     //* need to duplicate the array
     char *duplicateArray = strdup(word_array);  // Returns a pointer to a null-terminated byte string, which is a duplicate of the string pointed to by str1. The returned pointer must be passed to free to avoid a memory leak.
 
-    char *token = strtok(duplicateArray, "\n\t\r ");  // "\n\t " is the delimeter
+    char *token = strtok(duplicateArray, " \n\r\t");  // "\n\t\r " is the delimeter
     while (token != NULL) {
         insertNode(wc, token);
-        token = strtok(NULL, "\n\t\r ");
+        token = strtok(NULL, " \n\r\t");
     }
     free(duplicateArray);
 
