@@ -12,19 +12,18 @@ typedef int Tid;
  * thread_create. Negative Tid values are used for error codes or control codes.
  */
 
-enum { THREAD_ANY = -1,
-	THREAD_SELF = -2,
-	THREAD_INVALID = -3,
-	THREAD_NONE = -4,
-	THREAD_NOMORE = -5,
-	THREAD_NOMEMORY = -6,
-	THREAD_FAILED = -7
+enum { THREAD_ANY      = -1,
+       THREAD_SELF     = -2,
+       THREAD_INVALID  = -3,
+       THREAD_NONE     = -4,
+       THREAD_NOMORE   = -5,
+       THREAD_NOMEMORY = -6,
+       THREAD_FAILED   = -7
 };
 
 static inline int
-thread_ret_ok(Tid ret)
-{
-	return (ret >= 0 ? 1 : 0);
+thread_ret_ok(Tid ret) {
+    return (ret >= 0 ? 1 : 0);
 }
 
 /*************************************************
@@ -43,7 +42,7 @@ Tid thread_id(void);
  *
  * THREAD_NOMORE: no more threads can be created.
  * THREAD_NOMEMORY: no more memory available to create a thread stack. */
-Tid thread_create(void (*fn) (void *), void *arg);
+Tid thread_create(void (*fn)(void *), void *arg);
 
 /* thread_yield should suspend the calling thread and run the thread with
  * identifier tid. The calling thread is put in the ready queue. tid can be
