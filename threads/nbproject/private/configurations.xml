@@ -2,6 +2,28 @@
 <configurationDescriptor version="97">
   <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
     <df root="." name="0">
+      <df name="os-050">
+        <df name="threads">
+          <in>interrupt.c</in>
+          <in>interrupt.h</in>
+          <in>show_handler.c</in>
+          <in>show_ucontext.c</in>
+          <in>test_basic.c</in>
+          <in>test_cv_broadcast.c</in>
+          <in>test_cv_signal.c</in>
+          <in>test_lock.c</in>
+          <in>test_preemptive.c</in>
+          <in>test_thread.c</in>
+          <in>test_thread.h</in>
+          <in>test_wait.c</in>
+          <in>test_wait_kill.c</in>
+          <in>test_wait_parent.c</in>
+          <in>test_wakeup.c</in>
+          <in>test_wakeup_all.c</in>
+          <in>thread.c</in>
+          <in>thread.h</in>
+        </df>
+      </df>
       <in>interrupt.c</in>
       <in>interrupt.h</in>
       <in>show_handler.c</in>
@@ -61,8 +83,7 @@
           <runcommandpicklistitem>"${OUTPUT_PATH}"</runcommandpicklistitem>
           <runcommandpicklistitem>"${OUTPUT_PATH}" /cad2/ece344f/tester /homes/r/cheny776/ece344/warmup/tester</runcommandpicklistitem>
         </runcommandpicklist>
-        <runcommand>"${OUTPUT_PATH}" /cad2/ece344f/tester /homes/r/cheny776/ece344/warmup/tester</runcommand>
-        <arguments>/cad2/ece344f/tester /homes/r/cheny776/ece344/warmup/tester</arguments>
+        <runcommand>"${OUTPUT_PATH}"</runcommand>
         <rundir>/nfs/ug/homes-2/c/cheny776/ece344/threads</rundir>
         <buildfirst>false</buildfirst>
         <terminal-type>0</terminal-type>
