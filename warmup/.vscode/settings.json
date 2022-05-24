@@ -2,5 +2,47 @@
   "files.exclude": {
     "nbproject": true,
     "os-050": true
-  }
+  },
+  
+  //# Code Runner
+  "code-runner.executorMap": {
+    // "c": "cd $dir && gcc $fileName -o $fileNameWithoutExt && $dir$fileNameWithoutExt",
+    "c": "cd $dir && gcc \"$fileName\" -o \"/nfs/ug/homes-2/c/cheny776/ece344/vscode Executables/$fileNameWithoutExt\" && \"/nfs/ug/homes-2/c/cheny776/ece344/vscode Executables/$fileNameWithoutExt\"",
+  },
+
+  //# Formatter
+  "[c]": {
+    "editor.defaultFormatter": "ms-vscode.cpptools",
+    // "editor.defaultFormatter": "xaver.clang-format",
+    "editor.tabSize": 4
+  },
+
+  //# Theme
+  "workbench.colorCustomizations": {
+    "[Dracula Soft]": {
+      "editor.foreground": "#ffffff" // 默认字体的颜色
+      // "editor.background": "#ff0000" // 背景的颜色
+    },
+    "editor.tokenColorCustomizations": {
+      "[Dracula Soft]": {
+        "comments": "#7e3648",
+        "strings": "#519657",
+        "functions": "#7e57c2",
+        "keywords": "#8e1da1",
+        "variables": "#e57373",
+        "numbers": "#e62020"
+      }
+    },
+  },
+  "C_Cpp.intelliSenseEngineFallback": "Enabled",
+
+  //# cSpell.ignorePaths
+  "cSpell.ignorePaths": [
+    "/usr/bin/**",
+    "/usr/lib/gcc/**",
+    "/usr/include/**",
+    "/usr/include/x86_64-linux-gnu/sys",
+    "*.json",
+    "**/.vscode/**"
+  ],
 }

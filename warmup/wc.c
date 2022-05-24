@@ -8,20 +8,22 @@
 
 #include "common.h"
 
+// Description: Use each wordNode to record the string of the word, the number of occurrence of the word in the input
+// Description: words with same hashKey forms a linked list
 typedef struct wordNode {
-    char *str;  // the word
+    char *str;  // keep the word
     int occurrence;
     struct wordNode *next;  // other word with same hashKey
 } wordNode;
 
+// Description: array of linked list of wordNode*
 struct wc {
-    /* you can define this struct to have whatever fields you want. */
-    wordNode **hashTable;  //* array of wordNode*
+    wordNode **hashTable;
 };
 
 int tableSize = 0;  // make hashtale's size global variable
 
-// Description: generate hash key for a word
+// Description: insert a new string to the array of linked list
 int myHashFunction(char *str) {
     int hashKey = 0;
 
@@ -33,41 +35,43 @@ int myHashFunction(char *str) {
 }
 
 void insertNode(struct wc *wc, char *str) {
-    int hashKey    = myHashFunction(str);
-    wordNode *prev = NULL;
-    wordNode *curr = wc->hashTable[hashKey];
+    int hashKey = myHashFunction(str);
 
     // 1° first time occurrence of mapKey
     if (!wc->hashTable[hashKey]) {
         wc->hashTable[hashKey]             = (wordNode *)malloc(sizeof(wordNode));
         wc->hashTable[hashKey]->occurrence = 1;
-        wc->hashTable[hashKey]->str        = (char*) malloc((strlen(str) + 1) * sizeof(char));
+        wc->hashTable[hashKey]->str        = malloc(strlen(str) + 1);
         strcpy(wc->hashTable[hashKey]->str, str);
         wc->hashTable[hashKey]->next = NULL;
         return;
     }
 
-    // 2° Have checked this string before
-    else {
-        while (curr) {
-            if (!strcmp(str, curr->str)) {  // same string
-                curr->occurrence += 1;
-                return;
-            }
-            prev = curr;
-            curr = curr->next;
-        }
 
-        //  3° Another key for this mapKey
-        if (curr == NULL) {  // iterate over the linked list
-            // create a new wordNode
-            curr             = (wordNode *)malloc(sizeof(wordNode));
-            curr->occurrence = 1;
-            curr->str        = malloc(strlen(str) + 1);
-            strcpy(curr->str, str);
-            prev->next = curr;
-            curr->next = NULL;
+    wordNode *prev = NULL;
+    wordNode *curr = wc->hashTable[hashKey];
+
+    // 2° Have checked this string before
+    while (curr) {
+        if (strcmp(str, curr->str) == 0) {  // same string
+            curr->occurrence += 1;
+            return;
         }
+        // iterate over the linked list
+        prev = curr;
+        curr = curr->next;
+    }
+
+    //  3° Another key for this mapKey
+    if (curr == NULL) {  // dispensable
+        // create a new wordNode and attach it to the end of the linked list
+        curr      = (wordNode *)malloc(sizeof(wordNode));
+        curr->str = malloc(strlen(str) + 1);
+        strcpy(curr->str, str);
+        curr->occurrence = 1;
+
+        prev->next = curr;
+        curr->next = NULL;
     }
 
     return;
@@ -81,6 +85,7 @@ struct wc *wc_init(char *word_array, long size) {
 
     int wordCount = 0;
 
+    // $ count the number of words
     int i = 0;
     for (; i < size; i++) {
         if (isspace(word_array[i]))
@@ -91,27 +96,25 @@ struct wc *wc_init(char *word_array, long size) {
 
     tableSize = 2 * wordCount;  // good rule of thumb is to use a size that is roughly twice the total number of elements that are expected to be stored in the hash table.
 
-
-    wc->hashTable = (wordNode **)malloc(tableSize * sizeof(wordNode));
-
+    //$ Initialize the table
+    wc->hashTable = (wordNode **)malloc(tableSize * sizeof(wordNode *));
     assert(wc->hashTable);
 
     for (int i = 0; i < tableSize; i++)
         wc->hashTable[i] = NULL;  // initialize to NULL first
 
     //* need to duplicate the array
-    char *duplicateArray = strdup(word_array);  // Returns a pointer to a null-terminated byte string, which is a duplicate of the string pointed to by str1. The returned pointer must be passed to free to avoid a memory leak.
+    char *duplicateArray = strdup(word_array);  // Usage: Returns a pointer to a null-terminated byte string, which is a duplicate of the string pointed to by str1. The returned pointer must be passed to free to avoid a memory leak.
 
-    char *token = strtok(duplicateArray, " \n\r\t");  // "\n\t\r " is the delimeter
+    char *token = strtok(duplicateArray, " \t\n\r");  // "\n\t\r " is the delimeter
     while (token != NULL) {
         insertNode(wc, token);
-        token = strtok(NULL, " \n\r\t");
+        token = strtok(NULL, " \t\n\r");
     }
     free(duplicateArray);
 
     return wc;
 }
-
 
 void wc_output(struct wc *wc) {
     for (int i = 0; i < tableSize; i++) {
@@ -135,8 +138,8 @@ void wc_destroy(struct wc *wc) {
     free(wc);
 }
 
-// int main(int argc, char **argv) {
-//     struct wc *worldCount = wc_init(argv[1], sizeof(argv[1]));
-//     wc_output(worldCount);
-//     wc_destroy(worldCount);
-// }
+int main(int argc, char **argv) {
+    struct wc *worldCount = wc_init(argv[1], sizeof(argv[1]));
+    wc_output(worldCount);
+    wc_destroy(worldCount);
+}

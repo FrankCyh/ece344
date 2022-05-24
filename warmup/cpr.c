@@ -9,8 +9,9 @@
 #include "common.h"
 
 void copyFile(char *src, char *dst) {
+    int srcFile = 0, dstFile = 0;  // file descriptor for source file and destination file
+
     // open source file to copy from
-    int srcFile = 0, dstFile = 0;
     if ((srcFile = open(src, O_RDONLY)) == -1)
         syserror(open, src);
 
@@ -23,10 +24,10 @@ void copyFile(char *src, char *dst) {
     ssize_t readNum  = 0;
     ssize_t writeNum = 0;  // use signed size to handle error or interrupt
 
-    if ((readNum = read(srcFile, buf, 4096)) == -1)
-        syserror(read, src); 
+    if ((readNum = read(srcFile, buf, 4096)) == -1)  // fail to read
+        syserror(read, src);
 
-    while (readNum > 0) { // if readNum == 0, then empty file
+    while (readNum > 0) {  // situation not included: if readNum == 0, then empty file, or read finished
         // write to destination
         writeNum = write(dstFile, buf, readNum);  //* writeNum should be the same as readNum
 
@@ -47,14 +48,14 @@ void copyDirectory_R(char *src, char *dst) {
     // get file status in buffer
     struct stat *statBuf = (struct stat *)malloc(sizeof(struct stat));
 
-    if (stat(src, statBuf) == -1)  // get file status failed
+    if (stat(src, statBuf) == -1)  // get file status failed, if not failed, file status is in statBuf
         syserror(stat, src);
 
     if (S_ISREG(statBuf->st_mode)) {  // is a file
 
         copyFile(src, dst);
 
-        if (chmod(dst, statBuf->st_mode) == -1)  // check if permission is allowed
+        if (chmod(dst, statBuf->st_mode) == -1)  // check if change permission is allowed
             syserror(chmod, dst);
 
     } else if (S_ISDIR(statBuf->st_mode)) {  // is a directory
@@ -63,7 +64,7 @@ void copyDirectory_R(char *src, char *dst) {
         DIR *direc = opendir(src);
 
         // create dest directory
-        if (mkdir(dst, S_IRWXU) == -1)  // error for creating directory
+        if (mkdir(dst, S_IRWXU) == -1)  // error for creating directory // S_IRWXU: Read, write, and search, or execute, for the file owner
             syserror(mkdir, dst);
 
         // read direc
@@ -71,9 +72,9 @@ void copyDirectory_R(char *src, char *dst) {
 
         for (direcRead = readdir(direc); direcRead; direcRead = readdir(direc)) {  // end of the directory stream is reached, NULL is returned
             // don't need to copy "." and ".." in Linux
-            if (!strcmp(direcRead->d_name, ".")) {
+            if (strcmp(direcRead->d_name, ".") == 0) {
                 direcRead = readdir(direc);  // skip .
-            } else if (!strcmp(direcRead->d_name, "..")) {
+            } else if (!strcmp(direcRead->d_name, "..") == 0) {
                 direcRead = readdir(direc);  // skip ..
             } else {
                 // new file name for destination
@@ -98,8 +99,8 @@ void copyDirectory_R(char *src, char *dst) {
         if (chmod(dst, statBuf->st_mode) == -1)  // check if permission is allowed
             syserror(chmod, dst);
 
-        //close direc
-        if(closedir(direc) == -1)
+        // close direc
+        if (closedir(direc) == -1)
             syserror(closedir, src);
 
         free(direcRead);
@@ -121,6 +122,6 @@ int main(int argc, char *argv[]) {
     }
 
     copyDirectory_R(argv[1], argv[2]);
-    
+
     return 0;
 }

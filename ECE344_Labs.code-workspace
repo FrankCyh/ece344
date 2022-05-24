@@ -1,8 +1,16 @@
 {
 	"folders": [
 		{
-			"path": "warmup"
+			"path": "."
 		}
 	],
-	"settings": {}
+	"settings": {
+		"files.associations": {
+			"stdio.h": "c",
+			"*.tcc": "c",
+			"fstream": "c",
+			"stdlib.h": "c",
+			"tuple": "c"
+		}
+	}
 }

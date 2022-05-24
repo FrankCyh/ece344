@@ -8,10 +8,12 @@
             "name": "C debugger",
             "type": "cppdbg",
             "request": "launch",
+            // "program": "/nfs/ug/homes-2/c/cheny776/ece344/vscode Executables/${fileBasenameNoExtension}",
             "program": "${fileDirname}/${fileBasenameNoExtension}",
-            "args": [],
+            "args": ["cat and dogs"],
             "stopAtEntry": false,
-            "cwd": "${fileDirname}",
+            "cwd": "${workspaceFolder}",
+            // "cwd": "${fileDirname}",
             "environment": [],
             "externalConsole": false,
             "MIMode": "gdb",
@@ -19,6 +21,7 @@
         }
     ]
 }
+
 // {
 //     // Use IntelliSense to learn about possible attributes.
 //     // Hover to view descriptions of existing attributes.

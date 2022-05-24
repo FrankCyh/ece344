@@ -8,7 +8,8 @@
                 "-g",
                 "${file}",
                 "-o",
-                "${fileDirname}/${fileBasenameNoExtension}" // generate executatble in the current folder
+                "${fileDirname}/${fileBasenameNoExtension}"
+                // "/nfs/ug/homes-2/c/cheny776/ece344/vscode Executables/${fileBasenameNoExtension}" // generate executatble in the current folder
             ],
             "options": {
                 "cwd": "${fileDirname}"
